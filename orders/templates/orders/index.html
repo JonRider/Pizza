@@ -73,15 +73,22 @@
 
         <tbody>
           {% for regular in regulars %}
-            <tr>
+          {% if regular.size|stringformat:"s" == "Small" %}
+          <tr>
                 <td>{{ regular.choice }}</td>
-                <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{regular.id}}" /><input name="size" type="hidden" value="Small"><i class="fa fa-plus-circle plus"></i></button>${{ regular.price_small }}</form></td>
-                <td><i class="fa fa-plus-circle plus"></i> ${{ regular.price_large }}</td>
-            </tr>
+                <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{regular.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ regular.price }}</form></td>
+
+          {% elif regular.size|stringformat:"s" == "Large" %}
+            <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{regular.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ regular.price }}</form></td>
+          </tr>
+          {% endif %}
+
           {% endfor %}
         </tbody>
     </table>
   </div>
+
+
 
   <div class="l-box">
   <table class="pure-table pure-table-bordered">
