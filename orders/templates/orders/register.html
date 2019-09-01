@@ -12,16 +12,11 @@
         {{ message }}
     </div>
 {% endif %}
-<div>
-<form action="{% url 'login' %}" method="post">
+<form action="{% url 'register' %}" method="post">
     {% csrf_token %}
     <input name="username" type="text"/>
+    <input name="email" type="email"/>
     <input name="password" type="password"/>
-    <input type="submit" value="Login"/>
-</form>
-</div>
-<form action="{% url 'register' %}" method="get">
-    
     <input type="submit" value="Register"/>
 </form>
   </body>
