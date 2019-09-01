@@ -1,22 +1,48 @@
-from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 
-from .models import Sicilian, Regular, Size
+from .models import Sicilian, Regular, Size, Cart
 
 # Create your views here.
 def index(request):
+    if not request.user.is_authenticated:
+        return render(request, "orders/login.html", {"message": None})
     context = {
         "regulars": Regular.objects.all(),
         "sicilians": Sicilian.objects.all(),
+        "user": request.user
     }
     return render(request, "orders/index.html", context)
 
+def login_view(request):
+    username = request.POST["username"]
+    password = request.POST["password"]
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        return render(request, "orders/login.html", {"message": "Invalid credentials."})
+
+def logout_view(request):
+    logout(request)
+    return render(request, "orders/login.html", {"message": "Logged out."})
+
 def order(request):
+    if not request.user.is_authenticated:
+        return render(request, "orders/login.html", {"message": None})
     regular_id = int(request.POST["order"])
     regular = Regular.objects.get(pk=regular_id)
+    cart = Cart.objects.get(user="Jon")
+    cart.regulars.add(regular)
+    regulars_list = list(Cart.objects.filter(user="Jon"))
     context = {
         "regulars": Regular.objects.all(),
         "sicilians": Sicilian.objects.all(),
         "ordered": regular,
+        "regulars_list": regulars_list,
+        "user": request.user
     }
     return render(request, "orders/index.html", context)

@@ -35,3 +35,7 @@ class Topping(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+class Cart(models.Model):
+    user = models.CharField(max_length=64)
+    regulars = models.ManyToManyField(Regular, blank=True, related_name="regulars")
