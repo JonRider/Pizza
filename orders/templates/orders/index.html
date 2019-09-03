@@ -122,13 +122,9 @@
 <div class="pure-u-1-3">
   <h5>Your Order:</h5>
   <ul>
-    <li>{{size}} {{ordered}}</li>
-  </ul>
-  <ul>
-    {% for item in cart %}
-    <li>{{item}}</li>
+    {% for regular in cart_regulars %}
+    <li>{{regular}}</li>
     {% endfor %}
-
 </ul>
 </div>
 

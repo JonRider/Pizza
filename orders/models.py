@@ -51,7 +51,6 @@ class Cart(models.Model):
     user = models.CharField(max_length=64)
     regulars = models.ManyToManyField(Regular, blank=True, related_name="regulars")
 
-
 class OrderItem(models.Model):
     item = models.ForeignKey(Regular, on_delete=models.CASCADE)
 

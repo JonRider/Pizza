@@ -52,16 +52,18 @@ def logout_view(request):
 def order(request):
     if not request.user.is_authenticated:
         return render(request, "orders/login.html", {"message": None})
+    # Find Item in Database
     regular_id = int(request.POST["order"])
     regular = Regular.objects.get(pk=regular_id)
-    cart = Cart.objects.get(pk=1)
+    # Find users cart
+    cart = Cart.objects.get(user=request.user)
+    # Add order to cart
     cart.regulars.add(regular)
-    cart = Cart.objects.get(pk=1)
+
     context = {
         "regulars": Regular.objects.all(),
         "sicilians": Sicilian.objects.all(),
-        "ordered": regular,
-        "cart": cart.regulars.all(),
+        "cart_regulars": cart.regulars.all(),
         "user": request.user
     }
     return render(request, "orders/index.html", context)
