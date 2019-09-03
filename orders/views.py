@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import Sicilian, Regular, Size, Cart
+from .models import Sicilian, Regular, Size, Cart, OrderItem, Order
 
 # Create your views here.
 def index(request):
@@ -54,14 +54,14 @@ def order(request):
         return render(request, "orders/login.html", {"message": None})
     regular_id = int(request.POST["order"])
     regular = Regular.objects.get(pk=regular_id)
-    cart = Cart.objects.get(user="Jon")
+    cart = Cart.objects.get(pk=1)
     cart.regulars.add(regular)
-    regulars_list = list(Cart.objects.filter(user="Jon"))
+    cart = Cart.objects.get(pk=1)
     context = {
         "regulars": Regular.objects.all(),
         "sicilians": Sicilian.objects.all(),
         "ordered": regular,
-        "regulars_list": regulars_list,
+        "cart": cart.regulars.all(),
         "user": request.user
     }
     return render(request, "orders/index.html", context)
