@@ -93,7 +93,7 @@
     </table>
   </div>
 
-  <div class="l-box center">
+  <div class="l-box">
   <table class="pure-table pure-table-bordered">
     <thead>
         <tr>
@@ -107,10 +107,10 @@
       {% if sicilian.size|stringformat:"s" == "Small" %}
         <tr>
             <td>{{ sicilian.choice }}</td>
-            <td><i class="fa fa-plus-circle plus"></i> ${{ sicilian.price_small }}</td>
+            <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sicilian.id}}" /><i class="fa fa-plus-circle plus"></i></button> ${{ sicilian.price }}<input class="hidden" type="text" name="type" value="sicilian"></form></td>
 
       {% elif sicilian.size|stringformat:"s" == "Large" %}
-            <td><i class="fa fa-plus-circle plus"></i> ${{ sicilian.price_large }}</td>
+            <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sicilian.id}}" /><i class="fa fa-plus-circle plus"></i></button> ${{ sicilian.price }}<input class="hidden" type="text" name="type" value="sicilian"></form></td>
         </tr>
       {% endif %}
       {% endfor %}
@@ -124,7 +124,10 @@
   <h5>Your Order:</h5>
   <ul>
     {% for regular in cart_regulars %}
-    <li>{{regular}}</li>
+    <li>1 {{regular}}</li>
+    {% endfor %}
+    {% for sicilian in cart_sicilians %}
+    <li>1 {{sicilian}}</li>
     {% endfor %}
 </ul>
 </div>
