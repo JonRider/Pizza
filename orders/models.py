@@ -48,8 +48,9 @@ class Topping(models.Model):
         return self.name
 
 class Cart(models.Model):
-    user = models.CharField(max_length=64)
+    user = models.CharField(max_length=64) # will be propogated with session username
     regulars = models.ManyToManyField(Regular, blank=True, related_name="regulars")
+    sicilians = models.ManyToManyField(Sicilian, blank=True, related_name="sicilians")
 
 class OrderItem(models.Model):
     item = models.ForeignKey(Regular, on_delete=models.CASCADE)

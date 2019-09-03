@@ -82,21 +82,18 @@
           {% if regular.size|stringformat:"s" == "Small" %}
           <tr>
                 <td>{{ regular.choice }}</td>
-                <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{regular.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ regular.price }}</form></td>
+                <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{regular.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ regular.price }}<input class="hidden" type="text" name="type" value="regular"></form></td>
 
           {% elif regular.size|stringformat:"s" == "Large" %}
-            <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{regular.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ regular.price }}</form></td>
+            <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{regular.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ regular.price }}<input class="hidden" type="text" name="type" value="regular"></form></td>
           </tr>
           {% endif %}
-
           {% endfor %}
         </tbody>
     </table>
   </div>
 
-
-
-  <div class="l-box">
+  <div class="l-box center">
   <table class="pure-table pure-table-bordered">
     <thead>
         <tr>
@@ -107,11 +104,15 @@
     </thead>
     <tbody>
       {% for sicilian in sicilians %}
+      {% if sicilian.size|stringformat:"s" == "Small" %}
         <tr>
             <td>{{ sicilian.choice }}</td>
             <td><i class="fa fa-plus-circle plus"></i> ${{ sicilian.price_small }}</td>
+
+      {% elif sicilian.size|stringformat:"s" == "Large" %}
             <td><i class="fa fa-plus-circle plus"></i> ${{ sicilian.price_large }}</td>
         </tr>
+      {% endif %}
       {% endfor %}
     </tbody>
   </table>

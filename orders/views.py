@@ -52,18 +52,30 @@ def logout_view(request):
 def order(request):
     if not request.user.is_authenticated:
         return render(request, "orders/login.html", {"message": None})
-    # Find Item in Database
-    regular_id = int(request.POST["order"])
-    regular = Regular.objects.get(pk=regular_id)
-    # Find users cart
-    cart = Cart.objects.get(user=request.user)
-    # Add order to cart
-    cart.regulars.add(regular)
+    # Get User order request
+    id = int(request.POST["order"])
+    type = request.POST["type"]
+
+    # Find users cart or create
+    try:
+        cart = Cart.objects.get(user=request.user)
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(user=request.user)
+
+    # Find Appropriate item in Database and add to cart
+    if type == "regular":
+        regular = Regular.objects.get(pk=id)
+        cart.regulars.add(regular)
+    elif type == "sicilian":
+        sicilian = Sicilian.objects.get(pk=id)
+        cart.sicilians.add(sicilian)
+
 
     context = {
         "regulars": Regular.objects.all(),
         "sicilians": Sicilian.objects.all(),
         "cart_regulars": cart.regulars.all(),
+        "cart_sicilians": cart.sicilians.all(),
         "user": request.user
     }
     return render(request, "orders/index.html", context)
