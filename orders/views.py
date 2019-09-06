@@ -65,13 +65,12 @@ def order(request):
     # Find Appropriate item in Database and add to cart
     if type == "regular":
         regular = Regular.objects.get(pk=id)
-        cart.regulars.add(regular)
         regular_item = RegularItem.objects.create(regular=regular)
         # add toppings
         toppings = Topping.objects.get(name="Pepperoni")
         regular_item.toppings.add(toppings)
         # add regular item to cart
-        # remove regular item
+        cart.regulars.add(regular_item)
     elif type == "sicilian":
         sicilian = Sicilian.objects.get(pk=id)
         cart.sicilians.add(sicilian)
