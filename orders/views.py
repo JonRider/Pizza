@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import Sicilian, Regular, Size, Cart, OrderItem, Order
+from .models import Sicilian, Regular, Size, Cart, OrderItem, Order, RegularItem, Topping
 
 # Create your views here.
 def index(request):
@@ -66,6 +66,12 @@ def order(request):
     if type == "regular":
         regular = Regular.objects.get(pk=id)
         cart.regulars.add(regular)
+        regular_item = RegularItem.objects.create(regular=regular)
+        # add toppings
+        toppings = Topping.objects.get(name="Pepperoni")
+        regular_item.toppings.add(toppings)
+        # add regular item to cart
+        # remove regular item
     elif type == "sicilian":
         sicilian = Sicilian.objects.get(pk=id)
         cart.sicilians.add(sicilian)

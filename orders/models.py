@@ -47,6 +47,13 @@ class Topping(models.Model):
     def __str__(self):
         return self.name
 
+class RegularItem(models.Model):
+    regular = models.ForeignKey(Regular, on_delete=models.CASCADE)
+    toppings = models.ManyToManyField(Topping, blank=True, related_name="toppings")
+
+    def __str__(self):
+        return f"{self.regular.size} regular pizza with {self.regular.choice} topping(s)"
+
 class Cart(models.Model):
     user = models.CharField(max_length=64) # will be propogated with session username
     regulars = models.ManyToManyField(Regular, blank=True, related_name="regulars")
