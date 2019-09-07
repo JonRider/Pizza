@@ -13,6 +13,7 @@ def index(request):
     context = {
         "regulars": Regular.objects.all(),
         "sicilians": Sicilian.objects.all(),
+        "toppings": Topping.objects.all(),
         "user": request.user
     }
     return render(request, "orders/index.html", context)
@@ -79,6 +80,7 @@ def order(request):
     context = {
         "regulars": Regular.objects.all(),
         "sicilians": Sicilian.objects.all(),
+        "toppings": Topping.objects.all(),
         "cart_regulars": cart.regulars.all(),
         "cart_sicilians": cart.sicilians.all(),
         "user": request.user
