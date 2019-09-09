@@ -24,6 +24,10 @@
       color: blue;
     }
 
+    .add {
+
+    }
+
     .circle {
       -moz-appearance: none;
       -webkit-appearance: none;
@@ -65,14 +69,10 @@
   </style>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      var plus = document.querySelectorAll('.plus');
-      plus.forEach(function(e) {
-         // e.addEventListener('click', function(){ alert("Clicked:" + e.innerText); });
-       });
 
        // Modal Script
        var modal = document.querySelector(".modal");
-       var triggers = document.querySelectorAll(".plus");
+       var triggers = document.querySelectorAll(".add");
        var orderToppings = document.querySelector("#order");
 
        function toggleModal() {
@@ -80,13 +80,15 @@
        }
 
        // Get infor about the pizza order. Pizza type and id number then display in modal
-       function getOrder(type, id) {
+       function getOrder(type, id, toppingNumber) {
          var pizzaType = document.querySelector("#pizza-type");
          var pizzaID = document.querySelector("#pizza-id");
+         var toppingLabel = document.querySelector("#toppings")
          // Do the same thing for number of choices and then javacscript to limit choices to that selection
          pizzaType.value = type;
          pizzaID.value = id;
          console.log(pizzaID.value);
+         toppingLabel.innerText = "Choose " + toppingNumber + " toppings"
          modal.classList.toggle("show-modal");
        }
 
@@ -99,7 +101,8 @@
          e.onclick = function () {
            let type = e.firstChild.value;
            let id = e.id;
-           getOrder(type, id);
+           let toppingNumber = e.firstChild.name;
+           getOrder(type, id, toppingNumber);
          }
 
        });
@@ -134,10 +137,10 @@
       <div class="modal">
         <div class="modal-content">
           <h1>Toppings</h1>
-          <h3>Choose 3 Toppings</h3>
+          <h3 id="toppings"></h3>
           <form action="{% url 'order' %}" method="post">{% csrf_token %}
             <input class="hidden" type="text" name="type" id="pizza-type" value="regular">
-            <input class="hidden" type="text" name="id" id="pizza-id" value="0">
+            <input class="hidden" type="text" name="order" id="pizza-id" value="0">
             <div class="pure-g">
               <div class="pure-u-1-2">
                 {% for topping in toppings|slice:":10" %}
@@ -175,11 +178,18 @@
           {% if regular.size|stringformat:"s" == "Small" %}
           <tr>
                 <td>{{ regular.choice }}</td>
-                <td><i class="fa fa-plus-circle plus" id="{{regular.id}}"><input class="hidden" type="text" name="type" value="regular"></i> ${{ regular.price }}</td>
-
+                {% if regular.choice|stringformat:"s" == "Cheese" %}
+                <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{regular.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ regular.price }}<input class="hidden" type="text" name="type" value="regular"></form></td>
+                {% else %}
+                <td><i class="fa fa-plus-circle plus add" id="{{regular.id}}"><input class="hidden" type="text" name="{{ regular.choice }}" value="regular"></i> ${{ regular.price }}</td>
+                {% endif %}
 
           {% elif regular.size|stringformat:"s" == "Large" %}
+            {% if regular.choice|stringformat:"s" == "Cheese" %}
             <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{regular.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ regular.price }}<input class="hidden" type="text" name="type" value="regular"></form></td>
+            {% else %}
+            <td><i class="fa fa-plus-circle plus add" id="{{regular.id}}"><input class="hidden" type="text" name="{{ regular.choice }}" value="regular"></i> ${{ regular.price }}</td>
+            {% endif %}
           </tr>
           {% endif %}
           {% endfor %}
