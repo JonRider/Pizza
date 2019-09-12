@@ -59,6 +59,24 @@ class RegularItem(models.Model):
                 add += f" and {list[2]}"
             return f"{self.regular.size} regular pizza with " + add
 
+class SicilianItem(models.Model):
+    sicilian = models.ForeignKey(Sicilian, on_delete=models.CASCADE)
+    toppings = models.ManyToManyField(Topping, blank=True, related_name="sic_toppings")
+
+    def __str__(self):
+        if f"{self.sicilian.choice}" == "Cheese":
+            return f"{self.sicilian.size} sicilian cheese pizza"
+        else:
+            add = ""
+            list = self.toppings.all()
+            add += f"{list[0]}"
+            if len(list) > 1:
+                add += f", {list[1]}"
+            if len(list) > 2:
+                add += f" and {list[2]}"
+            return f"{self.sicilian.size} sicilian pizza with " + add
+
+
 class Cart(models.Model):
     user = models.CharField(max_length=64) # will be propogated with session username
     regulars = models.ManyToManyField(RegularItem, blank=True, related_name="regulars")
