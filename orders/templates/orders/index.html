@@ -91,10 +91,10 @@
          else if (toppingNumber == "Cheese") {
            return 0;
          }
-         else if (toppingNumber == "1 Topping") {
+         else if (toppingNumber == "1 Topping" || toppingNumber == "1 Item") {
            return 1;
          }
-         else if (toppingNumber == "2 Toppings") {
+         else if (toppingNumber == "2 Toppings" || toppingNumber == "2 Items") {
            return 2;
          }
          else {
@@ -214,10 +214,11 @@
           <tr>
                 <td>{{ regular.choice }}</td>
                 {% if regular.choice|stringformat:"s" == "Cheese" %}
-                <td class="cheese"><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{regular.id}}"/><i class="fa fa-plus-circle plus"></i></button>${{ regular.price }}<input class="hidden" type="text" name="type" value="regular"></form></td>
+                <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{regular.id}}"/><i class="fa fa-plus-circle plus"></i></button>${{ regular.price }}<input class="hidden" type="text" name="type" value="regular"></form></td>
                 {% else %}
                 <td><i class="fa fa-plus-circle plus add" id="{{regular.id}}"><input class="hidden" type="text" name="{{ regular.choice }}" value="regular"></i> ${{ regular.price }}</td>
                 {% endif %}
+
 
           {% elif regular.size|stringformat:"s" == "Large" %}
             {% if regular.choice|stringformat:"s" == "Cheese" %}
@@ -246,10 +247,19 @@
       {% if sicilian.size|stringformat:"s" == "Small" %}
         <tr>
             <td>{{ sicilian.choice }}</td>
+            {% if sicilian.choice|stringformat:"s" == "Cheese" %}
             <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sicilian.id}}" /><i class="fa fa-plus-circle plus"></i></button> ${{ sicilian.price }}<input class="hidden" type="text" name="type" value="sicilian"></form></td>
+            {% else %}
+            <td><i class="fa fa-plus-circle plus add" id="{{sicilian.id}}"><input class="hidden" type="text" name="{{ sicilian.choice }}" value="sicilian"></i> ${{ sicilian.price }}</td>
+            {% endif %}
+
 
       {% elif sicilian.size|stringformat:"s" == "Large" %}
+            {% if sicilian.choice|stringformat:"s" == "Cheese" %}
             <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sicilian.id}}" /><i class="fa fa-plus-circle plus"></i></button> ${{ sicilian.price }}<input class="hidden" type="text" name="type" value="sicilian"></form></td>
+            {% else %}
+            <td><i class="fa fa-plus-circle plus add" id="{{sicilian.id}}"><input class="hidden" type="text" name="{{ sicilian.choice }}" value="sicilian"></i> ${{ sicilian.price }}</td>
+            {% endif %}
         </tr>
       {% endif %}
       {% endfor %}

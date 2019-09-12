@@ -33,7 +33,8 @@ class Sicilian(models.Model):
     def __str__(self):
         if self.choice == "Cheese":
             return f"{self.size} sicilian {self.choice} pizza"
-        return f"{self.size} sicilian pizza with {self.choice} topping(s)"
+        else:
+            return f"{self.size} sicilian pizza with {self.choice} topping(s)"
 
 
 class Topping(models.Model):
@@ -76,12 +77,13 @@ class SicilianItem(models.Model):
                 add += f" and {list[2]}"
             return f"{self.sicilian.size} sicilian pizza with " + add
 
-
 class Cart(models.Model):
     user = models.CharField(max_length=64) # will be propogated with session username
     regulars = models.ManyToManyField(RegularItem, blank=True, related_name="regulars")
-    sicilians = models.ManyToManyField(Sicilian, blank=True, related_name="sicilians")
+    sicilians = models.ManyToManyField(SicilianItem, blank=True, related_name="sicilians")
 
+    def __str__(self):
+        return f"{self.user}'s cart"
 
 class OrderItem(models.Model):
     item = models.ForeignKey(Regular, on_delete=models.CASCADE)
