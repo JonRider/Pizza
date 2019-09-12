@@ -1,15 +1,5 @@
 from django.db import models
 from django.conf import settings
-# Choices
-PIZZA_CHOICES = (
-    ('R', 'Regular'),
-    ('S', 'Sicilian')
-)
-
-SIZE_CHOICES = (
-    ('S', 'Small'),
-    ('L', 'Large')
-)
 
 # Create your models here.
 class Choice(models.Model):
@@ -30,7 +20,10 @@ class Regular(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return f"{self.size} regular pizza with {self.choice} topping(s)"
+        if self.choice == "Cheese":
+            return f"{self.size} regular {self.choice} pizza"
+        else:
+            return f"{self.size} regular pizza with {self.choice} topping(s)"
 
 class Sicilian(models.Model):
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE) # Number of topping
@@ -38,6 +31,8 @@ class Sicilian(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
+        if self.choice == "Cheese":
+            return f"{self.size} sicilian {self.choice} pizza"
         return f"{self.size} sicilian pizza with {self.choice} topping(s)"
 
 
@@ -52,13 +47,23 @@ class RegularItem(models.Model):
     toppings = models.ManyToManyField(Topping, blank=True, related_name="toppings")
 
     def __str__(self):
-        return f"{self.regular.size} regular pizza with {self.regular.choice} topping(s)"
+        if f"{self.regular.choice}" == "Cheese":
+            return f"{self.regular.size} regular cheese pizza"
+        else:
+            add = ""
+            list = self.toppings.all()
+            add += f"{list[0]}"
+            if len(list) > 1:
+                add += f", {list[1]}"
+            if len(list) > 2:
+                add += f" and {list[2]}"
+            return f"{self.regular.size} regular pizza with " + add
 
 class Cart(models.Model):
     user = models.CharField(max_length=64) # will be propogated with session username
     regulars = models.ManyToManyField(RegularItem, blank=True, related_name="regulars")
     sicilians = models.ManyToManyField(Sicilian, blank=True, related_name="sicilians")
-    
+
 
 class OrderItem(models.Model):
     item = models.ForeignKey(Regular, on_delete=models.CASCADE)

@@ -34,6 +34,7 @@
       background-color: #fff;
       border: none;
       outline: none;
+      margin-left: -6px;
     }
 
     .modal {
@@ -87,6 +88,9 @@
          if(toppingNumber == "Special") {
            return 5;
          }
+         else if (toppingNumber == "Cheese") {
+           return 0;
+         }
          else if (toppingNumber == "1 Topping") {
            return 1;
          }
@@ -96,7 +100,6 @@
          else {
            return 3;
          }
-
        }
 
        // Setup Checkboxes div to call tally
@@ -131,11 +134,6 @@
          modal.classList.toggle("show-modal");
        }
 
-       // This will deprecate as call will be handled by Django
-       function makeOrder() {
-         modal.classList.toggle("show-modal");
-       }
-
        // Add event listeners to each pizza button which requires more options
        triggers.forEach(function (e) {
          e.onclick = function () {
@@ -144,11 +142,8 @@
            let toppingNumber = e.firstChild.name;
            getOrder(type, id, toppingNumber);
          }
-
        });
 
-       // Make the order when user clicks on the order button This will also deprecate
-       orderToppings.addEventListener("click", makeOrder);
 
     });
 
@@ -184,12 +179,12 @@
             <div id="checkboxes" class="pure-g">
               <div class="pure-u-1-2">
                 {% for topping in toppings|slice:":10" %}
-                <input type="checkbox" name="{{topping}}" value="{{topping}}"> {{topping}}<br>
+                <input type="checkbox" name="checks" value="{{topping}}"> {{topping}}<br>
                 {% endfor %}
               </div>
               <div class="pure-u-1-2">
                 {% for topping in toppings|slice:"10:" %}
-                <input type="checkbox" name="{{topping}}" value="{{topping}}"> {{topping}}<br>
+                <input type="checkbox" name="checks" value="{{topping}}"> {{topping}}<br>
                 {% endfor %}
               </div>
             </div>

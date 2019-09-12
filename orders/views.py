@@ -56,6 +56,7 @@ def order(request):
     # Get User order request
     id = int(request.POST["order"])
     type = request.POST["type"]
+    topping_list = request.POST.getlist("checks")
 
     # Find users cart or create
     try:
@@ -68,8 +69,9 @@ def order(request):
         regular = Regular.objects.get(pk=id)
         regular_item = RegularItem.objects.create(regular=regular)
         # add toppings
-        toppings = Topping.objects.get(name="Pepperoni")
-        regular_item.toppings.add(toppings)
+        for topping in topping_list:
+            top = Topping.objects.get(name=topping)
+            regular_item.toppings.add(top)
         # add regular item to cart
         cart.regulars.add(regular_item)
     elif type == "sicilian":
