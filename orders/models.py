@@ -20,10 +20,12 @@ class Regular(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        if self.choice == "Cheese":
-            return f"{self.size} regular {self.choice} pizza"
+        if f"{self.choice}" == "Cheese":
+            return f"{self.size} regular cheese pizza"
+        elif f"{self.choice}" == "Special":
+            return f"{self.size} special pizza"
         else:
-            return f"{self.size} regular pizza with {self.choice} topping(s)"
+            return f"{self.size} regular pizza with {self.choice}"
 
 class Sicilian(models.Model):
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE) # Number of topping
@@ -31,10 +33,12 @@ class Sicilian(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        if self.choice == "Cheese":
-            return f"{self.size} sicilian {self.choice} pizza"
+        if f"{self.choice}" == "Cheese":
+            return f"{self.size} sicilian cheese pizza"
+        elif f"{self.choice}" == "Special":
+            return f"{self.size} special pizza"
         else:
-            return f"{self.size} sicilian pizza with {self.choice} topping(s)"
+            return f"{self.size} sicilian pizza with {self.choice}"
 
 
 class Topping(models.Model):
@@ -56,8 +60,10 @@ class RegularItem(models.Model):
             add += f"{list[0]}"
             if len(list) > 1:
                 add += f", {list[1]}"
-            if len(list) > 2:
+            if len(list) > 2 and len(list) != 5:
                 add += f" and {list[2]}"
+            if len(list) == 5:
+                add += f", {list[2]}, {list[3]} and {list[4]}"
             return f"{self.regular.size} regular pizza with " + add
 
 class SicilianItem(models.Model):
@@ -73,8 +79,10 @@ class SicilianItem(models.Model):
             add += f"{list[0]}"
             if len(list) > 1:
                 add += f", {list[1]}"
-            if len(list) > 2:
+            if len(list) > 2 and len(list) != 5:
                 add += f" and {list[2]}"
+            if len(list) == 5:
+                add += f", {list[2]}, {list[3]} and {list[4]}"
             return f"{self.sicilian.size} sicilian pizza with " + add
 
 class Cart(models.Model):
