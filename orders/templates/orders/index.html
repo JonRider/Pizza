@@ -9,16 +9,85 @@
     <title>Pizza</title>
   </head>
   <style>
+
+    body {
+      background-image: url(https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1955&q=80);
+    }
+
+    table {
+      background-color: #fff;
+      width: 100%;
+      opacity: 0.9;
+
+    }
+
+    .navl {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #fff;
+    }
+
     .l-box {
          padding: 1em;
      }
 
+     .order {
+       margin: 2em;
+       background-color: lightgrey;
+       border-radius: 25px;
+       box-shadow: 5px 10px 8px #888888;
+       opacity: 0.9;
+     }
+
+    #title {
+      border-radius: 10px;
+      background-color: lightgrey;
+      box-shadow: 5px 10px 8px #888888;
+      width: -moz-fit-content;
+      width: -webkit-fit-content;
+      width: fit-content;
+      margin: auto;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      padding: 10px;
+    }
+
+    .heading {
+      border-radius: 10px;
+      background-color: lightgrey;
+      box-shadow: 5px 10px 8px #888888;
+      padding: 10px;
+      opacity: 0.9;
+    }
+
+     #cart {
+       text-align: center;
+       justify-content: center;
+
+     }
+
+     .button-red {
+            background: rgb(202, 60, 60); /* this is a maroon */
+            color: whitesmoke;
+        }
+
      .right {
        text-align: center;
      }
+
      .center {
        text-align: center;
      }
+
+    .left {
+      float: left;
+    }
+
+    .right {
+      float: right;
+    }
 
     .plus:hover {
       color: blue;
@@ -149,56 +218,60 @@
 
   </script>
   <body>
-    <div class="pure-menu pure-menu-horizontal">
-      <a href="#" class="pure-menu-heading pure-menu-link">Pizza</a>
-      <ul class="pure-menu-list ">
+
+    <!-- Toppings Modal -->
+    <div class="modal">
+      <div class="modal-content">
+        <h1>Toppings</h1>
+        <h3 id="toppings"></h3>
+        <form action="{% url 'order' %}" method="post">{% csrf_token %}
+          <input class="hidden" type="text" name="type" id="pizza-type" value="regular">
+          <input class="hidden" type="text" name="order" id="pizza-id" value="0">
+          <div id="checkboxes" class="pure-g">
+            <div class="pure-u-1-2">
+              {% for topping in toppings|slice:":10" %}
+              <input type="checkbox" name="checks" value="{{topping}}"> {{topping}}<br>
+              {% endfor %}
+            </div>
+            <div class="pure-u-1-2">
+              {% for topping in toppings|slice:"10:" %}
+              <input type="checkbox" name="checks" value="{{topping}}"> {{topping}}<br>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="l-box center">
+            <button class="pure-button" type="submit" id="order" disabled>Order</button>
+          </div>
+        </form>
+      </div>
+     </div>
+
+    <!-- Nav Menu -->
+    <div class="navl pure-menu pure-menu-horizontal">
+      <a href="#" class="left pure-menu-heading pure-menu-link">Pizza</a>
+      <ul class="pure-menu-list left">
           <li class="pure-menu-item"><a href="#" class="pure-menu-link">Menu</a></li>
-          <li class="pure-menu-item"><a href="#" class="pure-menu-link"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-          <li class="pure-menu-item"><a href="#" class="pure-menu-link">Logout</a></li>
+      </ul>
+      <ul class="pure-menu-list right">
+          <li class="pure-menu-item"><a class="pure-menu-disabled">Currently logged in as: {{ user.username }}</a></li>
+          <li class="pure-menu-item"><a href="{% url 'logout' %}" class="pure-menu-link">Logout</a></li>
       </ul>
     </div>
+
+
+    <!-- Heading -->
     <div class="pure-u-1">
       <div class="l-box center">
-        <h1>Menu</h1>
+        <h1 id="title">Menu</h1>
       </div>
     </div>
-    <div class="pure-g">
-    <div class="pure-u-1-3">
-      <h1>Hello, {{ user.first_name }}</h1>
-      <ul>
-        <li>Currently logged in as: {{ user.username }}</li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
-      </ul>
-      <div class="modal">
-        <div class="modal-content">
-          <h1>Toppings</h1>
-          <h3 id="toppings"></h3>
-          <form action="{% url 'order' %}" method="post">{% csrf_token %}
-            <input class="hidden" type="text" name="type" id="pizza-type" value="regular">
-            <input class="hidden" type="text" name="order" id="pizza-id" value="0">
-            <div id="checkboxes" class="pure-g">
-              <div class="pure-u-1-2">
-                {% for topping in toppings|slice:":10" %}
-                <input type="checkbox" name="checks" value="{{topping}}"> {{topping}}<br>
-                {% endfor %}
-              </div>
-              <div class="pure-u-1-2">
-                {% for topping in toppings|slice:"10:" %}
-                <input type="checkbox" name="checks" value="{{topping}}"> {{topping}}<br>
-                {% endfor %}
-              </div>
-            </div>
-            <div class="l-box center">
-              <button class="pure-button" type="submit" id="order" disabled>Order</button>
-            </div>
-          </form>
-        </div>
-       </div>
-    </div>
-    <div class="pure-u-1-3">
 
+    <!-- Main Content -->
+    <div class="pure-g">
+    <!-- First Column -->
+    <div class="pure-u-1-3 menu">
       <div class="l-box">
-        <h2>Pizzas</h2>
+        <h2 class="heading">Pizzas</h2>
       <table class="pure-table pure-table-bordered">
         <thead>
             <tr>
@@ -231,9 +304,15 @@
           {% endfor %}
         </tbody>
     </table>
-  </div>
+      </div>
+    </div>
+
+    <!-- Second Column -->
+    <div class="pure-u-1-3 menu">
+
 
   <div class="l-box">
+    <h2 class="heading">Subs</h2>
   <table class="pure-table pure-table-bordered">
     <thead>
         <tr>
@@ -248,7 +327,7 @@
         <tr>
             <td>{{ sicilian.choice }}</td>
             {% if sicilian.choice|stringformat:"s" == "Cheese" %}
-            <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sicilian.id}}" /><i class="fa fa-plus-circle plus"></i></button> ${{ sicilian.price }}<input class="hidden" type="text" name="type" value="sicilian"></form></td>
+            <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sicilian.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ sicilian.price }}<input class="hidden" type="text" name="type" value="sicilian"></form></td>
             {% else %}
             <td><i class="fa fa-plus-circle plus add" id="{{sicilian.id}}"><input class="hidden" type="text" name="{{ sicilian.choice }}" value="sicilian"></i> ${{ sicilian.price }}</td>
             {% endif %}
@@ -256,7 +335,7 @@
 
       {% elif sicilian.size|stringformat:"s" == "Large" %}
             {% if sicilian.choice|stringformat:"s" == "Cheese" %}
-            <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sicilian.id}}" /><i class="fa fa-plus-circle plus"></i></button> ${{ sicilian.price }}<input class="hidden" type="text" name="type" value="sicilian"></form></td>
+            <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sicilian.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ sicilian.price }}<input class="hidden" type="text" name="type" value="sicilian"></form></td>
             {% else %}
             <td><i class="fa fa-plus-circle plus add" id="{{sicilian.id}}"><input class="hidden" type="text" name="{{ sicilian.choice }}" value="sicilian"></i> ${{ sicilian.price }}</td>
             {% endif %}
@@ -267,23 +346,27 @@
   </table>
 </div>
 
-
 </div>
 <div class="pure-u-1-3">
-  <h5>Your Order:</h5>
-  <ul>
-    {% if cart_regulars or cart_sicilians %}
-    {% for regular in cart_regulars %}
-    <li>1 {{regular}}</li>
-    {% endfor %}
-    {% for sicilian in cart_sicilians %}
-    <li>1 {{sicilian}}</li>
-    {% endfor %}
-    {% else %}
-    <li> No items in your order yet! </li>
-    {% endif %}
-
-</ul>
+  <div class="l-box order">
+    <h2 id="cart">Your Order</h2>
+    <hr>
+    <ul>
+      {% if cart_regulars or cart_sicilians %}
+      {% for regular in cart_regulars %}
+      <li>1 {{regular}}</li>
+      {% endfor %}
+      {% for sicilian in cart_sicilians %}
+      <li>1 {{sicilian}}</li>
+      {% endfor %}
+      {% else %}
+      <li> No items in your order yet! </li>
+      {% endif %}
+    </ul>
+    <div class="center">
+      <a class="pure-button button-red" href="#"><i class="fa fa-shopping-cart fa-lg"></i> Place Order</a>
+    </div>
+  </div>
 </div>
 
   </body>
