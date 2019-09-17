@@ -83,7 +83,7 @@ class Cart(models.Model):
     sicilians = models.ManyToManyField(SicilianItem, blank=True, related_name="sicilians")
 
     def __str__(self):
-        return f"{self.user}'s cart"
+        return f"{self.user}'s cart. Order #{self.id}"
 
 class OrderItem(models.Model):
     item = models.ForeignKey(Regular, on_delete=models.CASCADE)

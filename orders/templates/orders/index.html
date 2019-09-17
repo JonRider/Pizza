@@ -272,12 +272,17 @@
 <div class="pure-u-1-3">
   <h5>Your Order:</h5>
   <ul>
+    {% if cart_regulars or cart_sicilians %}
     {% for regular in cart_regulars %}
     <li>1 {{regular}}</li>
     {% endfor %}
     {% for sicilian in cart_sicilians %}
     <li>1 {{sicilian}}</li>
     {% endfor %}
+    {% else %}
+    <li> No items in your order yet! </li>
+    {% endif %}
+
 </ul>
 </div>
 

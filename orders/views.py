@@ -8,12 +8,22 @@ from .models import Sicilian, Regular, Size, Cart, OrderItem, Order, RegularItem
 
 # Create your views here.
 def index(request):
+    # Redirect if user is not logged in
     if not request.user.is_authenticated:
         return render(request, "orders/login.html", {"message": None})
+
+    # Load saved cart
+    try:
+        cart = Cart.objects.get(user=request.user)
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(user=request.user)
+
     context = {
         "regulars": Regular.objects.all(),
         "sicilians": Sicilian.objects.all(),
         "toppings": Topping.objects.all(),
+        "cart_regulars": cart.regulars.all(),
+        "cart_sicilians": cart.sicilians.all(),
         "user": request.user
     }
     return render(request, "orders/index.html", context)
