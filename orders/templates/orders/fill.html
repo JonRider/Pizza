@@ -1,0 +1,33 @@
+{% extends "orders/base.html" %}
+
+{% block title %}
+Fill Pizza Order
+{% endblock %}
+
+{% block body %}
+<div class="l-box order checkout">
+  <div class="center">
+    <h1>Orders To Fill</h1>
+  </div>
+    {% if orders %}
+    {% for order in orders %}
+    <a class="bold">Order: #{{ order.id }}</a><br>
+    <a class="bold">Customer: {{order.user}}</a>
+    <ul>
+      {% for item in order.regulars.all %}
+      <li>1 {{ item }}</li>
+      {% endfor %}
+    </ul>
+    <form action="{% url 'fill' %}" method="post">{% csrf_token %}
+      <button class="pure-button button-red" name="order" value="{{ order.id }}" type="submit">Fill Order</button>
+    </form>
+    <hr>
+    {% endfor %}
+    {% else %}
+    <div class="center">
+      <br>
+      <h2>You filled all your orders! Have a beer!</h2>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

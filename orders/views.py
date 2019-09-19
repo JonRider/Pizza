@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.admin.views.decorators import staff_member_required
 from decimal import Decimal
 
 from .models import Sicilian, Regular, Size, Cart, RegularItem, SicilianItem, Topping
@@ -13,9 +14,13 @@ def index(request):
     if not request.user.is_authenticated:
         return render(request, "orders/login.html", {"message": None})
 
+    # Disable Place Order Button
+    disabled = "disabled"
+
     # Load saved cart
     try:
         cart = Cart.objects.get(user=request.user, ordered=False)
+        disabled = ""
     except Cart.DoesNotExist:
         cart = Cart.objects.create(user=request.user)
 
@@ -78,9 +83,14 @@ def order(request):
     type = request.POST["type"]
     topping_list = request.POST.getlist("checks")
 
+    # Disable Place Order Button
+    disabled = "disabled"
+
     # Find users unordered cart or create
     try:
         cart = Cart.objects.get(user=request.user, ordered=False)
+        # Enable Buttons if items in cart
+        disabled = ""
     except Cart.DoesNotExist:
         cart = Cart.objects.create(user=request.user)
 
@@ -122,6 +132,7 @@ def order(request):
         "cart_regulars": cart.regulars.all(),
         "cart_sicilians": cart.sicilians.all(),
         "total": total,
+        "disabled": disabled,
         "user": request.user
     }
     return render(request, "orders/index.html", context)
@@ -134,5 +145,24 @@ def checkout(request):
     cart = Cart.objects.get(user=request.user, ordered=False)
     cart.ordered = True
     cart.save()
+
     # Display Checkout Page
     return render(request, "orders/order.html")
+
+@staff_member_required
+def fill(request):
+    # If admin is filling an order
+    if request.method == "POST":
+        id = int(request.POST["order"])
+        ordered = Cart.objects.get(id=id)
+        ordered.completed = True
+        ordered.save()
+
+    # Get Orders that are made but still not completed
+    orders = Cart.objects.filter(ordered=True, completed=False)
+
+    context = {
+        "orders": orders
+    }
+
+    return render(request, "orders/fill.html", context)

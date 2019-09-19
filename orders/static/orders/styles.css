@@ -85,6 +85,10 @@ thead {
   float: right;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .plus:hover {
   color: blue;
 }

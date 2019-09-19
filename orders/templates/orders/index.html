@@ -156,7 +156,7 @@ Pizza Menu
     {% endif %}
     <div class="center">
       <form action="{% url 'checkout' %}" method="post">{% csrf_token %}
-        <button class="pure-button button-red" type="submit" href="#"><i class="fa fa-shopping-cart fa-lg"></i> Place Order</button>
+        <button class="pure-button button-red" type="submit" href="#" {{disabled}}><i class="fa fa-shopping-cart fa-lg"></i> Place Order</button>
       </form>
     </div>
   </div>
