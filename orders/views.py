@@ -125,3 +125,10 @@ def order(request):
         "user": request.user
     }
     return render(request, "orders/index.html", context)
+
+def checkout(request):
+    if not request.user.is_authenticated:
+        return render(request, "orders/login.html", {"message": None})
+
+    #Display Checkout Page
+    return render(request, "orders/order.html")

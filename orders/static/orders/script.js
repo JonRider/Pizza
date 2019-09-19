@@ -1,0 +1,76 @@
+document.addEventListener('DOMContentLoaded', function() {
+
+   // Modal Script
+   var modal = document.querySelector(".modal");
+   var triggers = document.querySelectorAll(".add");
+   // Toppings Order Button
+   var orderToppings = document.querySelector("#order");
+
+   // Global Toppings count
+   var count = 0;
+   var allowedToppings = 0;
+
+   // Get number of toppings allowed
+   function getNumber(toppingNumber) {
+     // Cheese (0) is already handled by Django Template
+     if(toppingNumber == "Special") {
+       return 5;
+     }
+     else if (toppingNumber == "Cheese") {
+       return 0;
+     }
+     else if (toppingNumber == "1 Topping" || toppingNumber == "1 Item") {
+       return 1;
+     }
+     else if (toppingNumber == "2 Toppings" || toppingNumber == "2 Items") {
+       return 2;
+     }
+     else {
+       return 3;
+     }
+   }
+
+   // Setup Checkboxes div to call tally
+   document.querySelector('#checkboxes').addEventListener('change', tally);
+   // Tally number of current checked checkboxes
+   function tally() {
+     count = document.querySelectorAll('#checkboxes input[type="checkbox"]:checked').length;
+     console.log(count);
+     // enable submit button if toppings number is right
+     if(count == allowedToppings) {
+       orderToppings.disabled = false;
+     }
+     else {
+       orderToppings.disabled = true;
+     }
+   }
+
+   // Get infor about the pizza order. Pizza type and id number then display in modal
+   function getOrder(type, id, toppingNumber) {
+     let pizzaType = document.querySelector("#pizza-type");
+     let pizzaID = document.querySelector("#pizza-id");
+     let toppingLabel = document.querySelector("#toppings");
+     // Get and Show topping number
+     allowedToppings = getNumber(toppingNumber);
+     pizzaType.value = type;
+     pizzaID.value = id;
+     toppingLabel.innerText = "Choose " + allowedToppings + " toppings"
+     if(allowedToppings == 1) {
+       toppingLabel.innerText = "Choose " + allowedToppings + " topping"
+     }
+     // Show the modal with given info
+     modal.classList.toggle("show-modal");
+   }
+
+   // Add event listeners to each pizza button which requires more options
+   triggers.forEach(function (e) {
+     e.onclick = function () {
+       let type = e.firstChild.value;
+       let id = e.id;
+       let toppingNumber = e.firstChild.name;
+       getOrder(type, id, toppingNumber);
+     }
+   });
+
+
+});

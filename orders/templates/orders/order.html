@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <h5>Your Order:</h5>
-    <ul>
-      <li>{{ordered}}</li>
-    </ul>
-  </body>
-</html>
+{% extends "orders/base.html" %}
+
+{% block title %}
+Pizza Order
+{% endblock %}
+
+{% block body %}
+  <h5>Your Order Has Been Submited Successfuly</h5>
+{% endblock %}
