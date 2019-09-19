@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from decimal import Decimal
 
-from .models import Sicilian, Regular, Size, Cart, RegularItem, SicilianItem, Topping
+from .models import Sicilian, Regular, Pasta, Size, Cart, RegularItem, SicilianItem, Topping
 
 # Create your views here.
 def index(request):
@@ -35,6 +35,7 @@ def index(request):
     context = {
         "regulars": Regular.objects.all(),
         "sicilians": Sicilian.objects.all(),
+        "pastas": Pasta.objects.all(),
         "toppings": Topping.objects.all(),
         "cart_regulars": cart.regulars.all(),
         "cart_sicilians": cart.sicilians.all(),
@@ -128,6 +129,7 @@ def order(request):
     context = {
         "regulars": Regular.objects.all(),
         "sicilians": Sicilian.objects.all(),
+        "pastas": Pasta.objects.all(),
         "toppings": Topping.objects.all(),
         "cart_regulars": cart.regulars.all(),
         "cart_sicilians": cart.sicilians.all(),

@@ -40,6 +40,12 @@ class Sicilian(models.Model):
         else:
             return f"{self.size} sicilian pizza with {self.choice}"
 
+class Pasta(models.Model):
+    name = models.CharField(max_length=64)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return self.name
 
 class Topping(models.Model):
     name = models.CharField(max_length=64)

@@ -90,6 +90,38 @@ Pizza Menu
           {% endfor %}
         </tbody>
     </table>
+    <br>
+    <table class="pure-table pure-table-bordered">
+      <thead>
+          <tr>
+              <th>Sicilian Pizza</th>
+              <th>Small</th>
+              <th>Large</th>
+          </tr>
+      </thead>
+      <tbody>
+        {% for sicilian in sicilians %}
+        {% if sicilian.size|stringformat:"s" == "Small" %}
+          <tr>
+              <td>{{ sicilian.choice }}</td>
+              {% if sicilian.choice|stringformat:"s" == "Cheese" %}
+              <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sicilian.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ sicilian.price }}<input class="hidden" type="text" name="type" value="sicilian"></form></td>
+              {% else %}
+              <td><i class="fa fa-plus-circle plus add" id="{{sicilian.id}}"><input class="hidden" type="text" name="{{ sicilian.choice }}" value="sicilian"></i> ${{ sicilian.price }}</td>
+              {% endif %}
+
+
+        {% elif sicilian.size|stringformat:"s" == "Large" %}
+              {% if sicilian.choice|stringformat:"s" == "Cheese" %}
+              <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sicilian.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ sicilian.price }}<input class="hidden" type="text" name="type" value="sicilian"></form></td>
+              {% else %}
+              <td><i class="fa fa-plus-circle plus add" id="{{sicilian.id}}"><input class="hidden" type="text" name="{{ sicilian.choice }}" value="sicilian"></i> ${{ sicilian.price }}</td>
+              {% endif %}
+          </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
       </div>
     </div>
 
@@ -99,38 +131,24 @@ Pizza Menu
 
   <div class="l-box">
     <h2 class="heading">Subs</h2>
-  <table class="pure-table pure-table-bordered">
-    <thead>
-        <tr>
-            <th>Sicilian Pizza</th>
-            <th>Small</th>
-            <th>Large</th>
-        </tr>
-    </thead>
-    <tbody>
-      {% for sicilian in sicilians %}
-      {% if sicilian.size|stringformat:"s" == "Small" %}
-        <tr>
-            <td>{{ sicilian.choice }}</td>
-            {% if sicilian.choice|stringformat:"s" == "Cheese" %}
-            <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sicilian.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ sicilian.price }}<input class="hidden" type="text" name="type" value="sicilian"></form></td>
-            {% else %}
-            <td><i class="fa fa-plus-circle plus add" id="{{sicilian.id}}"><input class="hidden" type="text" name="{{ sicilian.choice }}" value="sicilian"></i> ${{ sicilian.price }}</td>
-            {% endif %}
-
-
-      {% elif sicilian.size|stringformat:"s" == "Large" %}
-            {% if sicilian.choice|stringformat:"s" == "Cheese" %}
-            <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sicilian.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ sicilian.price }}<input class="hidden" type="text" name="type" value="sicilian"></form></td>
-            {% else %}
-            <td><i class="fa fa-plus-circle plus add" id="{{sicilian.id}}"><input class="hidden" type="text" name="{{ sicilian.choice }}" value="sicilian"></i> ${{ sicilian.price }}</td>
-            {% endif %}
-        </tr>
-      {% endif %}
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+    <h2 class="heading">Other Items</h2>
+    <table class="pure-table pure-table-bordered">
+      <thead>
+          <tr>
+              <th>Pasta</th>
+              <th>Price</th>
+          </tr>
+      </thead>
+      <tbody>
+        {% for pasta in pastas %}
+          <tr>
+              <td>{{ pasta }}</td>
+              <td>{{ pasta.price }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
 </div>
 <div class="pure-u-1-3">
