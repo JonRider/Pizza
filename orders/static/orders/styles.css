@@ -32,6 +32,12 @@ thead {
    box-shadow: 5px 10px 8px #888888;
  }
 
+.checkout {
+  margin-top: 15%;
+  margin-left: 10em;
+  margin-right: 10em;
+}
+
 #title {
   border-radius: 10px;
   background-color: lightgrey;
