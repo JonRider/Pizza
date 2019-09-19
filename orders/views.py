@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from decimal import Decimal
 
-from .models import Sicilian, Regular, Size, Cart, OrderItem, Order, RegularItem, SicilianItem, Topping
+from .models import Sicilian, Regular, Size, Cart, RegularItem, SicilianItem, Topping
 
 # Create your views here.
 def index(request):
@@ -15,7 +15,7 @@ def index(request):
 
     # Load saved cart
     try:
-        cart = Cart.objects.get(user=request.user)
+        cart = Cart.objects.get(user=request.user, ordered=False)
     except Cart.DoesNotExist:
         cart = Cart.objects.create(user=request.user)
 
@@ -78,9 +78,9 @@ def order(request):
     type = request.POST["type"]
     topping_list = request.POST.getlist("checks")
 
-    # Find users cart or create
+    # Find users unordered cart or create
     try:
-        cart = Cart.objects.get(user=request.user)
+        cart = Cart.objects.get(user=request.user, ordered=False)
     except Cart.DoesNotExist:
         cart = Cart.objects.create(user=request.user)
 
@@ -130,5 +130,9 @@ def checkout(request):
     if not request.user.is_authenticated:
         return render(request, "orders/login.html", {"message": None})
 
-    #Display Checkout Page
+    # Get the unordered users cart for checkout
+    cart = Cart.objects.get(user=request.user, ordered=False)
+    cart.ordered = True
+    cart.save()
+    # Display Checkout Page
     return render(request, "orders/order.html")

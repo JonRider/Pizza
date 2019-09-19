@@ -89,20 +89,8 @@ class Cart(models.Model):
     user = models.CharField(max_length=64) # will be propogated with session username
     regulars = models.ManyToManyField(RegularItem, blank=True, related_name="regulars")
     sicilians = models.ManyToManyField(SicilianItem, blank=True, related_name="sicilians")
+    ordered = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user}'s cart. Order #{self.id}"
-
-class OrderItem(models.Model):
-    item = models.ForeignKey(Regular, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.item
-
-class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    items = models.ManyToManyField(OrderItem)
-    ordered = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.user.username
