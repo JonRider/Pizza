@@ -141,13 +141,31 @@ def checkout(request):
     if not request.user.is_authenticated:
         return render(request, "orders/login.html", {"message": None})
 
-    # Get the unordered users cart for checkout
-    cart = Cart.objects.get(user=request.user, ordered=False)
-    cart.ordered = True
-    cart.save()
+    if request.method == "GET":
+        # Get the unordered users cart for checkout
+        cart = Cart.objects.get(user=request.user, ordered=False)
+        cart.ordered = True
+        cart.save()
+        id = cart.id
+        completed = False
 
+    # If user is checking order status
+    if request.method == "POST":
+        id = int(request.POST["order"])
+        order = Cart.objects.get(id=id)
+        # if the order has been completed notify user
+        if order.completed == True:
+            completed = True
+        else:
+            completed = False
+
+    context = {
+        "order": id,
+        "completed": completed,
+        "user": request.user
+    }
     # Display Checkout Page
-    return render(request, "orders/order.html")
+    return render(request, "orders/order.html", context)
 
 @staff_member_required
 def fill(request):
@@ -155,6 +173,7 @@ def fill(request):
     if request.method == "POST":
         id = int(request.POST["order"])
         ordered = Cart.objects.get(id=id)
+        # Set order as completed
         ordered.completed = True
         ordered.save()
 
@@ -162,7 +181,8 @@ def fill(request):
     orders = Cart.objects.filter(ordered=True, completed=False)
 
     context = {
-        "orders": orders
+        "orders": orders,
+        "user": request.user
     }
 
     return render(request, "orders/fill.html", context)

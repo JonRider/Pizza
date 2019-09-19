@@ -5,10 +5,30 @@ Pizza Order
 {% endblock %}
 
 {% block body %}
+<!-- Nav Menu -->
+<div class="navl pure-menu pure-menu-horizontal">
+  <a href="#" class="left pure-menu-heading pure-menu-link">Pizza</a>
+  <ul class="pure-menu-list left">
+      <li class="pure-menu-item"><a href="{% url 'index' %}" class="pure-menu-link">Menu</a></li>
+  </ul>
+  <ul class="pure-menu-list right">
+      <li class="pure-menu-item"><a class="pure-menu-disabled">Currently logged in as: {{ user.username }}</a></li>
+      <li class="pure-menu-item"><a href="{% url 'logout' %}" class="pure-menu-link">Logout</a></li>
+  </ul>
+</div>
+
 <div class="l-box order checkout">
   <div class="center">
-    <h1>Your Order Has Been Submited Successfuly</h1>
+    {% if completed == False %}
+    <h1>Your order #{{ order }} has been submited successfully!</h1>
     <p>Order Status: In Process</p>
+    <form action="{% url 'checkout' %}" method="post">{% csrf_token %}
+      <button class="pure-button button-red" name="order" value="{{ order }}" type="submit">Check Order Status</button>
+    </form>
+    {% else %}
+    <h1>Your Order #{{ order }} is complete and ready for pickup!</h1>
+    <p>Order Status: Complete</p>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

@@ -5,6 +5,18 @@ Fill Pizza Order
 {% endblock %}
 
 {% block body %}
+<!-- Nav Menu -->
+<div class="navl pure-menu pure-menu-horizontal">
+  <a href="#" class="left pure-menu-heading pure-menu-link">Pizza</a>
+  <ul class="pure-menu-list left">
+      <li class="pure-menu-item"><a href="{% url 'index' %}" class="pure-menu-link">Menu</a></li>
+  </ul>
+  <ul class="pure-menu-list right">
+      <li class="pure-menu-item"><a class="pure-menu-disabled">Currently logged in as: {{ user.username }}</a></li>
+      <li class="pure-menu-item"><a href="{% url 'logout' %}" class="pure-menu-link">Logout</a></li>
+  </ul>
+</div>
+
 <div class="l-box order checkout">
   <div class="center">
     <h1>Orders To Fill</h1>
