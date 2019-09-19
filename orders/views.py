@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from decimal import Decimal
 
 from .models import Sicilian, Regular, Size, Cart, OrderItem, Order, RegularItem, SicilianItem, Topping
 
@@ -18,12 +19,21 @@ def index(request):
     except Cart.DoesNotExist:
         cart = Cart.objects.create(user=request.user)
 
+    # Calculate Total
+    total = Decimal(0)
+
+    for item in cart.regulars.all():
+        total += item.regular.price
+    for item in cart.sicilians.all():
+        total += item.sicilian.price
+
     context = {
         "regulars": Regular.objects.all(),
         "sicilians": Sicilian.objects.all(),
         "toppings": Topping.objects.all(),
         "cart_regulars": cart.regulars.all(),
         "cart_sicilians": cart.sicilians.all(),
+        "total": total,
         "user": request.user
     }
     return render(request, "orders/index.html", context)
@@ -96,6 +106,14 @@ def order(request):
         # add sicilian item to cart
         cart.sicilians.add(sicilian_item)
 
+    # Calculate Total
+    total = Decimal(0)
+
+    for item in cart.regulars.all():
+        total += item.regular.price
+    for item in cart.sicilians.all():
+        total += item.sicilian.price
+
 
     context = {
         "regulars": Regular.objects.all(),
@@ -103,6 +121,7 @@ def order(request):
         "toppings": Topping.objects.all(),
         "cart_regulars": cart.regulars.all(),
         "cart_sicilians": cart.sicilians.all(),
+        "total": total,
         "user": request.user
     }
     return render(request, "orders/index.html", context)

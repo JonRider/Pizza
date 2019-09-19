@@ -17,8 +17,11 @@
     table {
       background-color: #fff;
       width: 100%;
-      opacity: 0.9;
+      border-radius: 10px;
+    }
 
+    thead {
+      border-radius: 10px;
     }
 
     .navl {
@@ -36,9 +39,8 @@
      .order {
        margin: 2em;
        background-color: lightgrey;
-       border-radius: 25px;
+       border-radius: 10px;
        box-shadow: 5px 10px 8px #888888;
-       opacity: 0.9;
      }
 
     #title {
@@ -59,7 +61,6 @@
       background-color: lightgrey;
       box-shadow: 5px 10px 8px #888888;
       padding: 10px;
-      opacity: 0.9;
     }
 
      #cart {
@@ -363,6 +364,11 @@
       <li> No items in your order yet! </li>
       {% endif %}
     </ul>
+    {% if cart_regulars or cart_sicilians %}
+    <div class="center">
+      <h3>Cart Total: ${{total}}</h3>
+    </div>
+    {% endif %}
     <div class="center">
       <a class="pure-button button-red" href="#"><i class="fa fa-shopping-cart fa-lg"></i> Place Order</a>
     </div>
