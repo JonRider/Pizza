@@ -29,6 +29,9 @@ Fill Pizza Order
       {% for item in order.regulars.all %}
       <li>1 {{ item }}</li>
       {% endfor %}
+      {% for item in order.sicilians.all %}
+      <li>1 {{ item }}</li>
+      {% endfor %}
     </ul>
     <form action="{% url 'fill' %}" method="post">{% csrf_token %}
       <button class="pure-button button-red" name="order" value="{{ order.id }}" type="submit">Fill Order</button>

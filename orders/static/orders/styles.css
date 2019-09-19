@@ -90,7 +90,7 @@ thead {
 }
 
 .plus:hover {
-  color: blue;
+  color: rgb(202, 60, 60); /* this is a maroon */
 }
 
 .add {
