@@ -131,6 +131,33 @@ Pizza Menu
 
   <div class="l-box">
     <h2 class="heading">Subs</h2>
+    <table class="pure-table pure-table-bordered">
+      <thead>
+          <tr>
+              <th>Subs</th>
+              <th>Small</th>
+              <th>Large</th>
+          </tr>
+      </thead>
+      <tbody>
+        {% for sub in subs %}
+
+          {% if sub.size|stringformat:"s" == "Small" %}
+          <tr>
+              <td>{{ sub.name }}</td>
+              <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sub.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ sub.price }}<input class="hidden" type="text" name="type" value="sub"></form></td>
+
+          {% elif sub.size|stringformat:"s" == "Large" %}
+              {% if sub.name|stringformat:"s" == "Sausage, Peppers & Onions"%}
+              <td>{{ sub.name }}</td>
+              <td class="center"> --- </td>
+              {% endif %}
+              <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sub.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ sub.price }}<input class="hidden" type="text" name="type" value="sub"></form></td>
+          </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
     <h2 class="heading">Other Items</h2>
     <table class="pure-table pure-table-bordered">
       <thead>

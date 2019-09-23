@@ -47,6 +47,14 @@ class Pasta(models.Model):
     def __str__(self):
         return self.name
 
+class Sub(models.Model):
+    name = models.CharField(max_length=64)
+    size = models.ForeignKey(Size, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.size} {self.name}"
+
 class Topping(models.Model):
     name = models.CharField(max_length=64)
 
