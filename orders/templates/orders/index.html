@@ -143,7 +143,7 @@ Pizza Menu
         {% for pasta in pastas %}
           <tr>
               <td>{{ pasta }}</td>
-              <td>{{ pasta.price }}</td>
+              <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{pasta.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ pasta.price }}<input class="hidden" type="text" name="type" value="pasta"></form></td>
           </tr>
         {% endfor %}
       </tbody>
@@ -156,12 +156,15 @@ Pizza Menu
     <h2 id="cart">Your Order</h2>
     <hr>
     <ul>
-      {% if cart_regulars or cart_sicilians %}
+      {% if cart_regulars or cart_sicilians or cart_pastas %}
       {% for regular in cart_regulars %}
       <li>1 {{regular}}</li>
       {% endfor %}
       {% for sicilian in cart_sicilians %}
       <li>1 {{sicilian}}</li>
+      {% endfor %}
+      {% for pasta in cart_pastas %}
+      <li>1 {{pasta}}</li>
       {% endfor %}
       {% else %}
       <li> No items in your order yet! </li>

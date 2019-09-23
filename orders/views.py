@@ -31,6 +31,8 @@ def index(request):
         total += item.regular.price
     for item in cart.sicilians.all():
         total += item.sicilian.price
+    for item in cart.pastas.all():
+        total += item.price
 
     context = {
         "regulars": Regular.objects.all(),
@@ -39,6 +41,7 @@ def index(request):
         "toppings": Topping.objects.all(),
         "cart_regulars": cart.regulars.all(),
         "cart_sicilians": cart.sicilians.all(),
+        "cart_pastas":cart.pastas.all(),
         "total": total,
         "user": request.user
     }
@@ -96,6 +99,7 @@ def order(request):
         cart = Cart.objects.create(user=request.user)
 
     # Find Appropriate item in Database and add to cart
+
     # Add Regular Item to Cart
     if type == "regular":
         regular = Regular.objects.get(pk=id)
@@ -106,6 +110,7 @@ def order(request):
             regular_item.toppings.add(top)
         # add regular item to cart
         cart.regulars.add(regular_item)
+
     # Add Sicilian Item to Cart
     elif type == "sicilian":
         sicilian = Sicilian.objects.get(pk=id)
@@ -117,6 +122,12 @@ def order(request):
         # add sicilian item to cart
         cart.sicilians.add(sicilian_item)
 
+    # Add Pasta to Cart
+    elif type == "pasta":
+        pasta = Pasta.objects.get(pk=id)
+        cart.pastas.add(pasta)
+
+
     # Calculate Total
     total = Decimal(0)
 
@@ -124,6 +135,8 @@ def order(request):
         total += item.regular.price
     for item in cart.sicilians.all():
         total += item.sicilian.price
+    for item in cart.pastas.all():
+        total += item.price
 
 
     context = {
@@ -133,6 +146,7 @@ def order(request):
         "toppings": Topping.objects.all(),
         "cart_regulars": cart.regulars.all(),
         "cart_sicilians": cart.sicilians.all(),
+        "cart_pastas": cart.pastas.all(),
         "total": total,
         "disabled": disabled,
         "user": request.user
