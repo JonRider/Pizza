@@ -61,6 +61,13 @@ class Topping(models.Model):
     def __str__(self):
         return self.name
 
+class SubTopping(models.Model):
+    name = models.CharField(max_length=64)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return self.name
+
 class RegularItem(models.Model):
     regular = models.ForeignKey(Regular, on_delete=models.CASCADE)
     toppings = models.ManyToManyField(Topping, blank=True, related_name="toppings")
@@ -97,7 +104,24 @@ class SicilianItem(models.Model):
                 add += f" and {list[2]}"
             if len(list) == 5:
                 add += f", {list[2]}, {list[3]} and {list[4]}"
-            return f"{self.sicilian.size} sicilian pizza with " + add
+            return f"{self.sicilian.size} sicilian pizza with {add}"
+
+class SubItem(models.Model):
+    sub = models.ForeignKey(Sub, on_delete=models.CASCADE)
+    toppings = models.ManyToManyField(SubTopping, blank=True, related_name="sub_toppings")
+
+    def __str__(self):
+        add = ""
+        list = self.toppings.all()
+        if len(list) == 0:
+            return f"{self.sub}"
+        else:
+            add += f"{list[0]}"
+            if len(list) == 2:
+                add += f", {list[1]}"
+            if len(list) == 3:
+                add += f" and {list[2]}"
+            return f"{self.sub} with {add}"
 
 class Cart(models.Model):
     user = models.CharField(max_length=64) # will be propogated with session username

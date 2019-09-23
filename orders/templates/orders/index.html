@@ -6,7 +6,7 @@ Pizza Menu
 
 {% block body %}
     <!-- Toppings Modal -->
-    <div class="modal">
+    <div id="pizza-modal" class="modal">
       <div class="modal-content">
         <h1>Toppings</h1>
         <h3 id="toppings"></h3>
@@ -31,6 +31,35 @@ Pizza Menu
         </form>
       </div>
      </div>
+
+     <!-- Sub Toppings Modal -->
+     <div id="sub-modal" class="modal">
+       <div class="modal-content">
+         <h1>Sub Toppings</h1>
+         <h3>Do you want to add any extra toppings?</h3>
+         <form action="{% url 'order' %}" method="post">{% csrf_token %}
+           <input class="hidden" type="text" name="type" value="sub">
+           <input class="hidden" type="text" name="order" id="sub-id" value="0">
+           <div id="sub-checkboxes" class="pure-g">
+             <div class="pure-u-1-2">
+               <!-- Just the extra cheese please -->
+               {% for topping in sub_toppings|slice:":1" %}
+               <input type="checkbox" name="sub-checks" value="{{topping}}"> {{topping}} <span class="bold">(${{topping.price}})</span><br>
+               {% endfor %}
+               <!-- Handle Steak Toppings in a weird way -->
+               <div id="steak">
+                 {% for topping in sub_toppings|slice:"1:" %}
+                 <input type="checkbox" name="sub-checks" value="{{topping}}"> {{topping}} <span class="bold">(${{topping.price}})</span><br>
+                 {% endfor %}
+               </div>
+              </div>
+           </div>
+           <div class="l-box center">
+             <button class="pure-button" type="submit" id="sub-order">Confirm Choice</button>
+           </div>
+         </form>
+       </div>
+      </div>
 
     <!-- Nav Menu -->
     <div class="navl pure-menu pure-menu-horizontal">
@@ -145,14 +174,14 @@ Pizza Menu
           {% if sub.size|stringformat:"s" == "Small" %}
           <tr>
               <td>{{ sub.name }}</td>
-              <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sub.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ sub.price }}<input class="hidden" type="text" name="type" value="sub"></form></td>
+              <td><i class="fa fa-plus-circle plus sub-add" id="{{sub.id}}"></i> ${{ sub.price }}</td>
 
           {% elif sub.size|stringformat:"s" == "Large" %}
               {% if sub.name|stringformat:"s" == "Sausage, Peppers & Onions"%}
               <td>{{ sub.name }}</td>
               <td class="center"> --- </td>
               {% endif %}
-              <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{sub.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ sub.price }}<input class="hidden" type="text" name="type" value="sub"></form></td>
+              <td><i class="fa fa-plus-circle plus sub-add" id="{{sub.id}}"></i> ${{ sub.price }}</td>
           </tr>
           {% endif %}
         {% endfor %}

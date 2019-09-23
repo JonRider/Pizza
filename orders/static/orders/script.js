@@ -1,10 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-   // Modal Script
-   var modal = document.querySelector(".modal");
+   // Pizza Modal Script
+   var modal = document.querySelector("#pizza-modal");
    var triggers = document.querySelectorAll(".add");
    // Toppings Order Button
    var orderToppings = document.querySelector("#order");
+
+   // Sub Modal Script
+   var subModal = document.querySelector("#sub-modal");
+   var subTriggers = document.querySelectorAll(".sub-add");
+
 
    // Global Toppings count
    var count = 0;
@@ -62,6 +67,24 @@ document.addEventListener('DOMContentLoaded', function() {
      modal.classList.toggle("show-modal");
    }
 
+   // Get Sub Toppings and Details
+   function getSub(id) {
+     // Get what sub we are looking at and add it to the sub-ids value
+     let subID = document.querySelector("#sub-id");
+     subID.value = id;
+
+     // Get steak div
+     let steak = document.querySelector("#steak");
+     // Is it a steak? ID's 17, 18, 19 and 20
+     console.log(id);
+     if(id > 16 && id < 21) {
+       steak.style.visibility = 'visible';
+     }
+     else steak.style.visibility = 'hidden';
+     // Show the modal with given info
+     subModal.classList.toggle("show-modal");
+   }
+
    // Add event listeners to each pizza button which requires more options
    triggers.forEach(function (e) {
      e.onclick = function () {
@@ -69,6 +92,14 @@ document.addEventListener('DOMContentLoaded', function() {
        let id = e.id;
        let toppingNumber = e.firstChild.name;
        getOrder(type, id, toppingNumber);
+     }
+   });
+
+   // Add event listeners to each sub button which gives more options
+   subTriggers.forEach(function (e) {
+     e.onclick = function () {
+       let id = e.id;
+       getSub(id);
      }
    });
 
