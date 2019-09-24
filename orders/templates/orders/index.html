@@ -96,6 +96,7 @@ Pizza Menu
             </tr>
         </thead>
 
+        <!-- Regular Pizzas -->
         <tbody>
           {% for regular in regulars %}
           {% if regular.size|stringformat:"s" == "Small" %}
@@ -120,6 +121,8 @@ Pizza Menu
         </tbody>
     </table>
     <br>
+
+    <!-- Sicilian Pizzas -->
     <table class="pure-table pure-table-bordered">
       <thead>
           <tr>
@@ -156,89 +159,92 @@ Pizza Menu
 
     <!-- Second Column -->
     <div class="pure-u-1-3 menu">
+      <div class="l-box">
+        <h2 class="heading">Subs</h2>
 
-
-  <div class="l-box">
-    <h2 class="heading">Subs</h2>
-    <table class="pure-table pure-table-bordered">
-      <thead>
-          <tr>
+        <!-- Subs -->
+        <table class="pure-table pure-table-bordered">
+          <thead>
+            <tr>
               <th>Subs</th>
               <th>Small</th>
               <th>Large</th>
-          </tr>
-      </thead>
-      <tbody>
-        {% for sub in subs %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for sub in subs %}
 
-          {% if sub.size|stringformat:"s" == "Small" %}
-          <tr>
+            {% if sub.size|stringformat:"s" == "Small" %}
+            <tr>
               <td>{{ sub.name }}</td>
               <td><i class="fa fa-plus-circle plus sub-add" id="{{sub.id}}"></i> ${{ sub.price }}</td>
 
-          {% elif sub.size|stringformat:"s" == "Large" %}
+              {% elif sub.size|stringformat:"s" == "Large" %}
               {% if sub.name|stringformat:"s" == "Sausage, Peppers & Onions"%}
               <td>{{ sub.name }}</td>
               <td class="center"> --- </td>
               {% endif %}
               <td><i class="fa fa-plus-circle plus sub-add" id="{{sub.id}}"></i> ${{ sub.price }}</td>
-          </tr>
-          {% endif %}
-        {% endfor %}
-      </tbody>
-    </table>
-    <h2 class="heading">Other Items</h2>
-    <table class="pure-table pure-table-bordered">
-      <thead>
-          <tr>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+        <h2 class="heading">Other Items</h2>
+        <table class="pure-table pure-table-bordered">
+          <thead>
+            <tr>
               <th>Pasta</th>
               <th>Price</th>
-          </tr>
-      </thead>
-      <tbody>
-        {% for pasta in pastas %}
-          <tr>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pasta in pastas %}
+            <tr>
               <td>{{ pasta }}</td>
               <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{pasta.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ pasta.price }}<input class="hidden" type="text" name="type" value="pasta"></form></td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-</div>
-<div class="pure-u-1-3">
-  <div class="l-box order">
-    <h2 id="cart">Your Order</h2>
-    <hr>
-    <ul>
-      {% if cart_regulars or cart_sicilians or cart_pastas or cart_subs %}
-      {% for regular in cart_regulars %}
-      <li>1 {{regular}}</li>
-      {% endfor %}
-      {% for sicilian in cart_sicilians %}
-      <li>1 {{sicilian}}</li>
-      {% endfor %}
-      {% for sub in cart_subs %}
-      <li>1 {{sub}}</li>
-      {% endfor %}
-      {% for pasta in cart_pastas %}
-      <li>1 {{pasta}}</li>
-      {% endfor %}
-      {% else %}
-      <li> No items in your order yet! </li>
-      {% endif %}
-    </ul>
-    {% if cart_regulars or cart_sicilians or cart_pastas or cart_subs %}
-    <div class="center">
-      <h3>Cart Total: ${{total}}</h3>
+    <!-- Third Column -->
+    <div class="pure-u-1-3">
+      <div class="l-box order">
+
+        <!-- Cart -->
+        <h2 id="cart">Your Order</h2>
+        <hr>
+        <ul>
+          {% if cart_regulars or cart_sicilians or cart_pastas or cart_subs %}
+          {% for regular in cart_regulars %}
+          <li>1 {{regular}}</li>
+          {% endfor %}
+          {% for sicilian in cart_sicilians %}
+          <li>1 {{sicilian}}</li>
+          {% endfor %}
+          {% for sub in cart_subs %}
+          <li>1 {{sub}}</li>
+          {% endfor %}
+          {% for pasta in cart_pastas %}
+          <li>1 {{pasta}}</li>
+          {% endfor %}
+          {% else %}
+          <li> No items in your order yet! </li>
+          {% endif %}
+        </ul>
+        {% if cart_regulars or cart_sicilians or cart_pastas or cart_subs %}
+        <div class="center">
+          <h3>Cart Total: ${{total}}</h3>
+        </div>
+        {% endif %}
+        <div class="center">
+          <form action="{% url 'checkout' %}" method="get">{% csrf_token %}
+            <button class="pure-button button-red" type="submit" href="#" {{disabled}}><i class="fa fa-shopping-cart fa-lg"></i> Place Order</button>
+          </form>
+        </div>
+      </div>
     </div>
-    {% endif %}
-    <div class="center">
-      <form action="{% url 'checkout' %}" method="get">{% csrf_token %}
-        <button class="pure-button button-red" type="submit" href="#" {{disabled}}><i class="fa fa-shopping-cart fa-lg"></i> Place Order</button>
-      </form>
-    </div>
-  </div>
-</div>
 {% endblock %}
