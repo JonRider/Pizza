@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from decimal import Decimal
 
-from .models import Sicilian, Regular, Pasta, Sub, Salad, Size, Cart, RegularItem, SicilianItem, SubItem, PastaItem, SaladItem, Topping, SubTopping
+from .models import Sicilian, Regular, Pasta, Sub, Salad, Dinner, Size, Cart, RegularItem, SicilianItem, SubItem, PastaItem, SaladItem, DinnerItem, Topping, SubTopping
 
 # Create your views here.
 def index(request):
@@ -40,6 +40,8 @@ def index(request):
         total += item.pasta.price
     for item in cart.salads.all():
         total += item.salad.price
+    for item in cart.dinners.all():
+        total += item.dinner.price
 
     context = {
         "regulars": Regular.objects.all(),
@@ -47,6 +49,7 @@ def index(request):
         "pastas": Pasta.objects.all(),
         "subs": Sub.objects.all(),
         "salads": Salad.objects.all(),
+        "dinners": Dinner.objects.all(),
         "toppings": Topping.objects.all(),
         "sub_toppings": SubTopping.objects.all(),
         "cart_regulars": cart.regulars.all(),
@@ -54,6 +57,7 @@ def index(request):
         "cart_subs": cart.subs.all(),
         "cart_pastas":cart.pastas.all(),
         "cart_salads": cart.salads.all(),
+        "cart_dinners": cart.dinners.all(),
         "total": total,
         "user": request.user
     }
@@ -159,6 +163,12 @@ def order(request):
         salad_item = SaladItem.objects.create(salad=salad)
         cart.salads.add(salad_item)
 
+    # Add dinner to Cart
+    else:
+        dinner = Dinner.objects.get(pk=id)
+        dinner_item = DinnerItem.objects.create(dinner=dinner)
+        cart.dinners.add(dinner_item)
+
     # Calculate Total
     total = Decimal(0)
     # Add up cart items
@@ -175,6 +185,8 @@ def order(request):
         total += item.pasta.price
     for item in cart.salads.all():
         total += item.salad.price
+    for item in cart.dinners.all():
+        total += item.dinner.price
 
     context = {
         "regulars": Regular.objects.all(),
@@ -182,6 +194,7 @@ def order(request):
         "pastas": Pasta.objects.all(),
         "subs": Sub.objects.all(),
         "salads": Salad.objects.all(),
+        "dinners": Dinner.objects.all(),
         "toppings": Topping.objects.all(),
         "sub_toppings": SubTopping.objects.all(),
         "cart_regulars": cart.regulars.all(),
@@ -189,6 +202,7 @@ def order(request):
         "cart_subs": cart.subs.all(),
         "cart_pastas": cart.pastas.all(),
         "cart_salads": cart.salads.all(),
+        "cart_dinners": cart.dinners.all(),
         "total": total,
         "disabled": disabled,
         "user": request.user

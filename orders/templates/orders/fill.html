@@ -36,10 +36,13 @@ Fill Pizza Order
       <li>1 {{ item }}</li>
       {% endfor %}
       {% for item in order.pastas.all %}
-      <li>1 {{ item.pasta }}</li>
+      <li>1 {{ item }}</li>
       {% endfor %}
       {% for item in order.salads.all %}
-      <li>1 {{ item.salad }}</li>
+      <li>1 {{ item }}</li>
+      {% endfor %}
+      {% for item in order.dinners.all %}
+      <li>1 {{ item }}</li>
       {% endfor %}
     </ul>
     <form action="{% url 'fill' %}" method="post">{% csrf_token %}

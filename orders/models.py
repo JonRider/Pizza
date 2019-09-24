@@ -62,6 +62,14 @@ class Sub(models.Model):
     def __str__(self):
         return f"{self.size} {self.name}"
 
+class Dinner(models.Model):
+    name = models.CharField(max_length=64)
+    size = models.ForeignKey(Size, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.size} {self.name}"
+
 class Topping(models.Model):
     name = models.CharField(max_length=64)
 
@@ -135,8 +143,20 @@ class SubItem(models.Model):
 class PastaItem(models.Model):
     pasta = models.ForeignKey(Pasta, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.pasta.name
+
 class SaladItem(models.Model):
     salad = models.ForeignKey(Salad, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.salad.name
+
+class DinnerItem(models.Model):
+    dinner = models.ForeignKey(Dinner, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.dinner.size} {self.dinner.name}"
 
 class Cart(models.Model):
     user = models.CharField(max_length=64) # will be propogated with session username
@@ -145,6 +165,7 @@ class Cart(models.Model):
     pastas = models.ManyToManyField(PastaItem, blank=True, related_name="pastas")
     salads = models.ManyToManyField(SaladItem, blank=True, related_name="salads")
     subs = models.ManyToManyField(SubItem, blank=True, related_name="subs")
+    dinners = models.ManyToManyField(DinnerItem, blank=True, related_name="dinners")
     ordered = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
 

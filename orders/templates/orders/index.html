@@ -154,6 +154,46 @@ Pizza Menu
         {% endfor %}
       </tbody>
     </table>
+
+    <!-- Pasta -->
+    <h2 class="heading">Pasta</h2>
+    <table class="pure-table pure-table-bordered">
+      <thead>
+        <tr>
+          <th>Pasta</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pasta in pastas %}
+        <tr>
+          <td>{{ pasta }}</td>
+          <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{pasta.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ pasta.price }}<input class="hidden" type="text" name="type" value="pasta"></form></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br>
+
+    <!-- Salads -->
+    <table class="pure-table pure-table-bordered">
+      <thead>
+        <tr>
+          <th>Salads</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for salad in salads %}
+        <tr>
+          <td>{{ salad }}</td>
+          <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{salad.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ salad.price }}<input class="hidden" type="text" name="type" value="salad"></form></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br>
+
       </div>
     </div>
 
@@ -192,43 +232,33 @@ Pizza Menu
         </table>
         <h2 class="heading">Other Items</h2>
 
-        <!-- Pasta -->
+
+
+
+
+        <!-- Dinners -->
         <table class="pure-table pure-table-bordered">
           <thead>
             <tr>
-              <th>Pasta</th>
-              <th>Price</th>
+              <th>Dinner Platters</th>
+              <th>Small</th>
+              <th>Large</th>
             </tr>
           </thead>
           <tbody>
-            {% for pasta in pastas %}
+            {% for dinner in dinners %}
+            {% if dinner.size|stringformat:"s" == "Small" %}
             <tr>
-              <td>{{ pasta }}</td>
-              <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{pasta.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ pasta.price }}<input class="hidden" type="text" name="type" value="pasta"></form></td>
+              <td>{{ dinner.name }}</td>
+              <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{dinner.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ dinner.price }}<input class="hidden" type="text" name="type" value="dinner"></form></td>
+
+              {% elif dinner.size|stringformat:"s" == "Large" %}
+              <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{dinner.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ dinner.price }}<input class="hidden" type="text" name="type" value="dinner"></form></td>
             </tr>
+            {% endif %}
             {% endfor %}
           </tbody>
         </table>
-        <br>
-
-        <!-- Salads -->
-        <table class="pure-table pure-table-bordered">
-          <thead>
-            <tr>
-              <th>Salads</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for salad in salads %}
-            <tr>
-              <td>{{ salad }}</td>
-              <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{salad.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ salad.price }}<input class="hidden" type="text" name="type" value="salad"></form></td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-
 
       </div>
     </div>
@@ -241,7 +271,7 @@ Pizza Menu
         <h2 id="cart">Your Order</h2>
         <hr>
         <ul>
-          {% if cart_regulars or cart_sicilians or cart_pastas or cart_subs or cart_salads %}
+          {% if cart_regulars or cart_sicilians or cart_pastas or cart_subs or cart_salads or cart_dinners %}
           {% for regular in cart_regulars %}
           <li>1 {{regular}}</li>
           {% endfor %}
@@ -252,16 +282,19 @@ Pizza Menu
           <li>1 {{sub}}</li>
           {% endfor %}
           {% for pasta in cart_pastas %}
-          <li>1 {{pasta.pasta}}</li>
+          <li>1 {{pasta}}</li>
           {% endfor %}
           {% for salad in cart_salads %}
-          <li>1 {{salad.salad}}</li>
+          <li>1 {{salad}}</li>
+          {% endfor %}
+          {% for dinner in cart_dinners %}
+          <li>1 {{dinner}}</li>
           {% endfor %}
           {% else %}
           <li> No items in your order yet! </li>
           {% endif %}
         </ul>
-        {% if cart_regulars or cart_sicilians or cart_pastas or cart_subs or cart_salads %}
+        {% if cart_regulars or cart_sicilians or cart_pastas or cart_subs or cart_salads or cart_dinners %}
         <div class="center">
           <h3>Cart Total: ${{total}}</h3>
         </div>
