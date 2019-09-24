@@ -1,8 +1,7 @@
 # Project 3
 
 Web Programming with Python and JavaScript
-
-# By JonRider
+By JonRider
 
 # Project Overview:
 This is a web app that allows users to order pizza and other food items from a virtual online store. The user can add items to their cart, select toppings for certain items and 'checkout'.
@@ -31,4 +30,4 @@ This file references all the url routes that I have used in my app.
 This folder includes styles.css which is my main stylesheet for this project. I used PureCSS because I wanted to try something besides bootstrap. Also included is script.js which contains all my JavaScript logic for this app. I spent quite a lot of time on the JavaScript. It allows for some cool features like the modal topping pickers for pizzas and subs.
 
 # Admin.py
-This file sets up what models can be accessed from the admin page. During development intermediary models were accessible. These were removed in the current version. Admins can however make additions and changes from here such as adding new toppings, adding new item types, or changing item names and prices. 
+This file sets up what models can be accessed from the admin page. During development intermediary models were accessible. These were removed in the current version. Admins can however make additions and changes from here such as adding new toppings, adding new item types, or changing item names and prices.
