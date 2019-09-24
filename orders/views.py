@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from decimal import Decimal
 
-from .models import Sicilian, Regular, Pasta, Sub, Salad, Size, Cart, RegularItem, SicilianItem, SubItem, PastaItem, Topping, SubTopping
+from .models import Sicilian, Regular, Pasta, Sub, Salad, Size, Cart, RegularItem, SicilianItem, SubItem, PastaItem, SaladItem, Topping, SubTopping
 
 # Create your views here.
 def index(request):
@@ -39,7 +39,7 @@ def index(request):
     for item in cart.pastas.all():
         total += item.pasta.price
     for item in cart.salads.all():
-        total += item.price
+        total += item.salad.price
 
     context = {
         "regulars": Regular.objects.all(),
@@ -156,7 +156,8 @@ def order(request):
     # Add Salad to Cart
     elif type == "salad":
         salad = Salad.objects.get(pk=id)
-        cart.salads.add(salad)
+        salad_item = SaladItem.objects.create(salad=salad)
+        cart.salads.add(salad_item)
 
     # Calculate Total
     total = Decimal(0)
@@ -173,7 +174,7 @@ def order(request):
     for item in cart.pastas.all():
         total += item.pasta.price
     for item in cart.salads.all():
-        total += item.price
+        total += item.salad.price
 
     context = {
         "regulars": Regular.objects.all(),

@@ -135,12 +135,15 @@ class SubItem(models.Model):
 class PastaItem(models.Model):
     pasta = models.ForeignKey(Pasta, on_delete=models.CASCADE)
 
+class SaladItem(models.Model):
+    salad = models.ForeignKey(Salad, on_delete=models.CASCADE)
+
 class Cart(models.Model):
     user = models.CharField(max_length=64) # will be propogated with session username
     regulars = models.ManyToManyField(RegularItem, blank=True, related_name="regulars")
     sicilians = models.ManyToManyField(SicilianItem, blank=True, related_name="sicilians")
     pastas = models.ManyToManyField(PastaItem, blank=True, related_name="pastas")
-    salads = models.ManyToManyField(Salad, blank=True, related_name="salads")
+    salads = models.ManyToManyField(SaladItem, blank=True, related_name="salads")
     subs = models.ManyToManyField(SubItem, blank=True, related_name="subs")
     ordered = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
