@@ -31,6 +31,11 @@ def index(request):
         total += item.regular.price
     for item in cart.sicilians.all():
         total += item.sicilian.price
+    for item in cart.subs.filter():
+        total += item.sub.price
+        # Add sub toppings
+        for top in item.toppings.filter():
+            total += top.price
     for item in cart.pastas.all():
         total += item.price
 
@@ -43,6 +48,7 @@ def index(request):
         "sub_toppings": SubTopping.objects.all(),
         "cart_regulars": cart.regulars.all(),
         "cart_sicilians": cart.sicilians.all(),
+        "cart_subs": cart.subs.all(),
         "cart_pastas":cart.pastas.all(),
         "total": total,
         "user": request.user
@@ -84,10 +90,12 @@ def logout_view(request):
 def order(request):
     if not request.user.is_authenticated:
         return render(request, "orders/login.html", {"message": None})
+
     # Get User order request
     id = int(request.POST["order"])
     type = request.POST["type"]
     topping_list = request.POST.getlist("checks")
+    sub_toppings = request.POST.getlist("sub-checks")
 
     # Disable Place Order Button
     disabled = "disabled"
@@ -124,6 +132,17 @@ def order(request):
         # add sicilian item to cart
         cart.sicilians.add(sicilian_item)
 
+    # Add Sub Item to Cart
+    elif type == "sub":
+        sub = Sub.objects.get(pk=id)
+        sub_item = SubItem.objects.create(sub=sub)
+        # add toppings
+        for topping in sub_toppings:
+            top = SubTopping.objects.get(name=topping)
+            sub_item.toppings.add(top)
+        # add sub item to cart
+        cart.subs.add(sub_item)
+
     # Add Pasta to Cart
     elif type == "pasta":
         pasta = Pasta.objects.get(pk=id)
@@ -132,11 +151,16 @@ def order(request):
 
     # Calculate Total
     total = Decimal(0)
-
+    # Add up cart items
     for item in cart.regulars.all():
         total += item.regular.price
     for item in cart.sicilians.all():
         total += item.sicilian.price
+    for item in cart.subs.filter():
+        total += item.sub.price
+        # Add sub toppings
+        for top in item.toppings.filter():
+            total += top.price
     for item in cart.pastas.all():
         total += item.price
 
@@ -150,6 +174,7 @@ def order(request):
         "sub_toppings": SubTopping.objects.all(),
         "cart_regulars": cart.regulars.all(),
         "cart_sicilians": cart.sicilians.all(),
+        "cart_subs": cart.subs.all(),
         "cart_pastas": cart.pastas.all(),
         "total": total,
         "disabled": disabled,

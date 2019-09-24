@@ -121,6 +121,8 @@ class SubItem(models.Model):
                 add += f", {list[1]}"
             if len(list) == 3:
                 add += f" and {list[2]}"
+            if len(list) == 4:
+                add += f" and {list[3]}"
             return f"{self.sub} with {add}"
 
 class Cart(models.Model):
@@ -128,6 +130,7 @@ class Cart(models.Model):
     regulars = models.ManyToManyField(RegularItem, blank=True, related_name="regulars")
     sicilians = models.ManyToManyField(SicilianItem, blank=True, related_name="sicilians")
     pastas = models.ManyToManyField(Pasta, blank=True, related_name="pastas")
+    subs = models.ManyToManyField(SubItem, blank=True, related_name="subs")
     ordered = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
 

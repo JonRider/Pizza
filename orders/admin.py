@@ -3,7 +3,7 @@ from .models import Choice, Topping, Sicilian, Size, Regular, Cart, RegularItem,
 # Register your models here.
 
 class CartAdmin(admin.ModelAdmin):
-    filter_horizontal = ("regulars", "sicilians")
+    filter_horizontal = ("regulars", "sicilians", "subs")
 
 class RegularAdmin(admin.ModelAdmin):
     filter_horizontal = ("toppings",)

@@ -32,6 +32,9 @@ Fill Pizza Order
       {% for item in order.sicilians.all %}
       <li>1 {{ item }}</li>
       {% endfor %}
+      {% for item in order.subs.all %}
+      <li>1 {{ item }}</li>
+      {% endfor %}
       {% for item in order.pastas.all %}
       <li>1 {{ item }}</li>
       {% endfor %}
