@@ -1,23 +1,23 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-min.css">
-    <title>Pizza</title>
-  </head>
-  <body>
-    {% if message %}
-    <div>
-        {{ message }}
-    </div>
-{% endif %}
-<form action="{% url 'register' %}" method="post">
+{% extends "orders/base.html" %}
+
+{% block title %}
+Pizza Register
+{% endblock %}
+
+{% block body %}
+<div class="l-box order checkout">
+  <div class="center">
+    <h1>Register</h1>
+  </div>
+  <form class="pure-form center" action="{% url 'register' %}" method="post">
     {% csrf_token %}
-    <input name="username" type="text"/>
-    <input name="email" type="email"/>
-    <input name="password" type="password"/>
-    <input type="submit" value="Register"/>
-</form>
-  </body>
-</html>
+    <input name="username" placeholder="Username" type="text"/>
+    <input name="email" placeholder="Email" type="email"/>
+    <input name="password" placeholder="Password" type="password"/>
+    <input class="pure-button" type="submit" value="Register"/>
+    {% if message %}
+    <h4>{{ message }}</h4>
+    {% endif %}
+  </form>
+</div>
+{% endblock %}
