@@ -191,6 +191,8 @@ Pizza Menu
           </tbody>
         </table>
         <h2 class="heading">Other Items</h2>
+
+        <!-- Pasta -->
         <table class="pure-table pure-table-bordered">
           <thead>
             <tr>
@@ -207,6 +209,27 @@ Pizza Menu
             {% endfor %}
           </tbody>
         </table>
+        <br>
+
+        <!-- Salads -->
+        <table class="pure-table pure-table-bordered">
+          <thead>
+            <tr>
+              <th>Salads</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for salad in salads %}
+            <tr>
+              <td>{{ salad }}</td>
+              <td><form action="{% url 'order' %}" method="post">{% csrf_token %}<button class="btn circle" type="submit" name="order" value="{{salad.id}}" /><i class="fa fa-plus-circle plus"></i></button>${{ salad.price }}<input class="hidden" type="text" name="type" value="salad"></form></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+
       </div>
     </div>
 
@@ -218,7 +241,7 @@ Pizza Menu
         <h2 id="cart">Your Order</h2>
         <hr>
         <ul>
-          {% if cart_regulars or cart_sicilians or cart_pastas or cart_subs %}
+          {% if cart_regulars or cart_sicilians or cart_pastas or cart_subs or cart_salads %}
           {% for regular in cart_regulars %}
           <li>1 {{regular}}</li>
           {% endfor %}
@@ -229,13 +252,16 @@ Pizza Menu
           <li>1 {{sub}}</li>
           {% endfor %}
           {% for pasta in cart_pastas %}
-          <li>1 {{pasta}}</li>
+          <li>1 {{pasta.pasta}}</li>
+          {% endfor %}
+          {% for salad in cart_salads %}
+          <li>1 {{salad}}</li>
           {% endfor %}
           {% else %}
           <li> No items in your order yet! </li>
           {% endif %}
         </ul>
-        {% if cart_regulars or cart_sicilians or cart_pastas or cart_subs %}
+        {% if cart_regulars or cart_sicilians or cart_pastas or cart_subs or cart_salads %}
         <div class="center">
           <h3>Cart Total: ${{total}}</h3>
         </div>

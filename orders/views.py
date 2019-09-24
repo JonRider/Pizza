@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from decimal import Decimal
 
-from .models import Sicilian, Regular, Pasta, Sub, Size, Cart, RegularItem, SicilianItem, SubItem, Topping, SubTopping
+from .models import Sicilian, Regular, Pasta, Sub, Salad, Size, Cart, RegularItem, SicilianItem, SubItem, PastaItem, Topping, SubTopping
 
 # Create your views here.
 def index(request):
@@ -37,6 +37,8 @@ def index(request):
         for top in item.toppings.filter():
             total += top.price
     for item in cart.pastas.all():
+        total += item.pasta.price
+    for item in cart.salads.all():
         total += item.price
 
     context = {
@@ -44,12 +46,14 @@ def index(request):
         "sicilians": Sicilian.objects.all(),
         "pastas": Pasta.objects.all(),
         "subs": Sub.objects.all(),
+        "salads": Salad.objects.all(),
         "toppings": Topping.objects.all(),
         "sub_toppings": SubTopping.objects.all(),
         "cart_regulars": cart.regulars.all(),
         "cart_sicilians": cart.sicilians.all(),
         "cart_subs": cart.subs.all(),
         "cart_pastas":cart.pastas.all(),
+        "cart_salads": cart.salads.all(),
         "total": total,
         "user": request.user
     }
@@ -146,8 +150,13 @@ def order(request):
     # Add Pasta to Cart
     elif type == "pasta":
         pasta = Pasta.objects.get(pk=id)
-        cart.pastas.add(pasta)
+        pasta_item = PastaItem.objects.create(pasta=pasta)
+        cart.pastas.add(pasta_item)
 
+    # Add Salad to Cart
+    elif type == "salad":
+        salad = Salad.objects.get(pk=id)
+        cart.salads.add(salad)
 
     # Calculate Total
     total = Decimal(0)
@@ -162,20 +171,23 @@ def order(request):
         for top in item.toppings.filter():
             total += top.price
     for item in cart.pastas.all():
+        total += item.pasta.price
+    for item in cart.salads.all():
         total += item.price
-
 
     context = {
         "regulars": Regular.objects.all(),
         "sicilians": Sicilian.objects.all(),
         "pastas": Pasta.objects.all(),
         "subs": Sub.objects.all(),
+        "salads": Salad.objects.all(),
         "toppings": Topping.objects.all(),
         "sub_toppings": SubTopping.objects.all(),
         "cart_regulars": cart.regulars.all(),
         "cart_sicilians": cart.sicilians.all(),
         "cart_subs": cart.subs.all(),
         "cart_pastas": cart.pastas.all(),
+        "cart_salads": cart.salads.all(),
         "total": total,
         "disabled": disabled,
         "user": request.user
@@ -216,8 +228,10 @@ def checkout(request):
 def fill(request):
     # If admin is filling an order
     if request.method == "POST":
+        # Get the users order number and pull their cart
         id = int(request.POST["order"])
         ordered = Cart.objects.get(id=id)
+
         # Set order as completed
         ordered.completed = True
         ordered.save()

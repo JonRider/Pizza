@@ -47,6 +47,13 @@ class Pasta(models.Model):
     def __str__(self):
         return self.name
 
+class Salad(models.Model):
+    name = models.CharField(max_length=64)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return self.name
+
 class Sub(models.Model):
     name = models.CharField(max_length=64)
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
@@ -125,11 +132,15 @@ class SubItem(models.Model):
                 add += f" and {list[3]}"
             return f"{self.sub} with {add}"
 
+class PastaItem(models.Model):
+    pasta = models.ForeignKey(Pasta, on_delete=models.CASCADE)
+
 class Cart(models.Model):
     user = models.CharField(max_length=64) # will be propogated with session username
     regulars = models.ManyToManyField(RegularItem, blank=True, related_name="regulars")
     sicilians = models.ManyToManyField(SicilianItem, blank=True, related_name="sicilians")
-    pastas = models.ManyToManyField(Pasta, blank=True, related_name="pastas")
+    pastas = models.ManyToManyField(PastaItem, blank=True, related_name="pastas")
+    salads = models.ManyToManyField(Salad, blank=True, related_name="salads")
     subs = models.ManyToManyField(SubItem, blank=True, related_name="subs")
     ordered = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)

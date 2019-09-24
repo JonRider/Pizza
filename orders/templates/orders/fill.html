@@ -36,6 +36,9 @@ Fill Pizza Order
       <li>1 {{ item }}</li>
       {% endfor %}
       {% for item in order.pastas.all %}
+      <li>1 {{ item.pasta }}</li>
+      {% endfor %}
+      {% for item in order.salads.all %}
       <li>1 {{ item }}</li>
       {% endfor %}
     </ul>

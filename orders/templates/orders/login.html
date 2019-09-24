@@ -15,7 +15,7 @@ Pizza Login
           {% csrf_token %}
           <input name="username" placeholder="Username" type="text"/>
           <input name="password" placeholder="Password" type="password"/>
-          <input class="pure-button" type="submit" value="Login"/>
+          <input class="pure-button button-red" type="submit" value="Login"/>
           {% if message %}
           <h4>{{ message }}</h4>
           {% endif %}
